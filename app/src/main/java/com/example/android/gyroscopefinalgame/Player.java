@@ -1,3 +1,6 @@
+/*
+Author: Will Yaj
+ */
 package com.example.android.gyroscopefinalgame;
 
 import android.graphics.Canvas;
@@ -6,13 +9,18 @@ import android.graphics.Point;
 import android.graphics.Rect;
 
 public class Player implements GameObject {
+    // Player shape style
     private Rect rectangle;
+
+    // Player color
     private int color;
 
+    // Getter for shape
     public Rect getRectangle() {
         return rectangle;
     }
 
+    // Constructor
     public Player(Rect rectangle, int color) {
         this.rectangle = rectangle;
         this.color = color;
@@ -28,14 +36,15 @@ public class Player implements GameObject {
         canvas.drawRect(rectangle, paint);
     }
 
+    // Required, but unused
     @Override
     public void update() {
-
+        // Do nothing
     }
 
     // Moves the rectangle to a different point
     public void update(Point point) {
-        // left, top, right, bottom
+        // Set as: left side, top side, right side, bottom side
         rectangle.set(point.x - rectangle.width()/2, point.y - rectangle.height()/2, point.x + rectangle.width()/2, point.y + rectangle.height()/2);
     }
 }
