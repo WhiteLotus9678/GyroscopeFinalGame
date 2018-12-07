@@ -1,3 +1,8 @@
+/*
+Author: Will Yaj
+
+Panel that handles running the program and drawing objects to the Main Activity
+ */
 package com.example.android.gyroscopefinalgame;
 
 import android.content.Context;
@@ -12,10 +17,13 @@ import android.view.SurfaceView;
 
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
+    // Program execution
     private MainThread thread;
 
+    // Scene manager
     private SceneManager manager;
 
+    // Set the thread and set the gameplay scene
     public GamePanel(Context context) {
         super(context);
 
@@ -30,11 +38,13 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         setFocusable(true);
     }
 
+    // Required, but unused
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
+        // Does nothing
     }
 
+    // Start running the thread and capture the initialized time
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         thread = new MainThread(getHolder(), this);
@@ -46,6 +56,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         thread.start();
     }
 
+    // Stop the thread when the app is closed out of (prevents memory leaks)
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         boolean retry = true;
@@ -60,22 +71,20 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
-    // Handles touch inputs
+    // Handles touch inputs using the Scene Manager
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         manager.receiveTouch(event);
 
         return true;
-
-        //return super.onTouchEvent(event);
     }
 
-    // Updates the game
+    // Updates the game using the Scene Manager
     public void update() {
         manager.update();
     }
 
-    // Displays the game
+    // Draws objects to the screen using the Scene Manager
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
