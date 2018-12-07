@@ -1,3 +1,6 @@
+/*
+Author: Will Yaj
+ */
 package com.example.android.gyroscopefinalgame;
 
 import android.graphics.Canvas;
@@ -5,18 +8,30 @@ import android.view.SurfaceHolder;
 
 public class MainThread extends Thread {
 
-    public static final int MAX_FPS = 60; // Most phones will always be able to run 30 FPS or above
+    // Framerate Per Second. Most phones will always be able to run 30 FPS or above
+    public static final int MAX_FPS = 60;
 
+    // The average FPS
     private double averageFPS;
+
+    // SurfaceHolder allows control of the surface size and format (editing pixels and monitoring)
     private SurfaceHolder surfaceHolder;
+
+    // Reference to the game panel
     private GamePanel gamePanel;
+
+    // Checks if the thread is running
     private boolean running;
+
+    // Canvas to draw on
     private static Canvas canvas;
 
+    // Setter for running
     public void setRunning(boolean running) {
         this.running = running;
     }
 
+    // Constructor
     public MainThread(SurfaceHolder surfaceHolder, GamePanel gamePanel) {
         super();
 
@@ -24,13 +39,25 @@ public class MainThread extends Thread {
         this.gamePanel = gamePanel;
     }
 
+    // Handles the thread when it starts running
     @Override
     public void run() {
+        // Thread start time
         long startTime;
-        long timeMillis = 1000/MAX_FPS;
+
+        // Capture the current time in milliseconds
+        long timeMillis;
+
+        // Thread wait time
         long waitTime;
+
+        // Frame count
         int frameCount = 0;
+
+        // Total time thread was running for
         long totalTime = 0;
+
+        // Target time needed to reach the max FPS (60)
         long targetTime = 1000/MAX_FPS;
 
         while(running) {
@@ -57,6 +84,7 @@ public class MainThread extends Thread {
 
             timeMillis = (System.nanoTime() - startTime)/1000000;
             waitTime = targetTime - timeMillis;
+
             try {
                 if(waitTime > 0) {
                     this.sleep(waitTime);
@@ -68,8 +96,8 @@ public class MainThread extends Thread {
             totalTime += System.nanoTime() - startTime;
             frameCount++;
 
+            // FOR DEBUGGING: Converting from ns to ms and then convert to find the average FPS
             if(frameCount == MAX_FPS) {
-                // Converting from ns to ms and then convert to find the average FPS
                 averageFPS = 1000/(totalTime/frameCount/1000000);
                 frameCount = 0;
                 totalTime = 0;

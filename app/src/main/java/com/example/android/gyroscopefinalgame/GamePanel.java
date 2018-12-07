@@ -23,7 +23,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     // Scene manager
     private SceneManager manager;
 
-    // Set the thread and set the gameplay scene
+    // Constructor
     public GamePanel(Context context) {
         super(context);
 
