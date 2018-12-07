@@ -1,3 +1,6 @@
+/*
+Author: Will Yaj
+ */
 package com.example.android.gyroscopefinalgame;
 
 import android.app.Activity;
@@ -26,7 +29,7 @@ public class MainActivity extends Activity {
         Constants.SCREEN_WIDTH = dm.widthPixels;
         Constants.SCREEN_HEIGHT = dm.heightPixels;
 
-        // TODO from ep. 1
+        // Set the content to the Game Panel
         setContentView(new GamePanel(this));
     }
 }
