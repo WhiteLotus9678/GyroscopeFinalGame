@@ -1,3 +1,6 @@
+/*
+Author: Will Yaj
+ */
 package com.example.android.gyroscopefinalgame;
 
 import android.graphics.Canvas;
@@ -9,17 +12,28 @@ import android.view.MotionEvent;
 
 public class GameplayScene implements Scene {
 
+    // Shape to bind text within
     private Rect r;
 
+    // Player object
     private Player player;
+
+    // Player position
     private Point playerPoint;
 
+    // Checks if the player is moving
     private boolean movingPlayer = false;
+
+    // Checks if the game is over
     private boolean gameOver = false;
+
+    // Handles the length of the game over loop
     private long gameOverTime;
 
+    // Time between frames
     private long frameTime;
 
+    // Constructor
     public GameplayScene() {
         // create player object here (separate player class)
         // setup player position here
@@ -33,6 +47,7 @@ public class GameplayScene implements Scene {
         frameTime = System.currentTimeMillis();
     }
 
+    // Resets the game
     public void reset() {
         // reset player position
 
@@ -45,11 +60,13 @@ public class GameplayScene implements Scene {
         movingPlayer = false;
     }
 
+    // Terminate the scene
     @Override
     public void terminate() {
         SceneManager.ACTIVE_SCENE = 0;
     }
 
+    // TODO: Would out in documentation but waiting for gyroscope sensor data
     @Override
     public void receiveTouch(MotionEvent event) {
         switch(event.getAction()) {
@@ -79,6 +96,7 @@ public class GameplayScene implements Scene {
         }
     }
 
+    // Draws all objects onto the scene
     @Override
     public void draw(Canvas canvas) {
         canvas.drawColor(Color.WHITE);
@@ -97,6 +115,7 @@ public class GameplayScene implements Scene {
         }
     }
 
+    // Updates every object in the scene
     @Override
     public void update() {
         if(!gameOver) {
@@ -125,6 +144,7 @@ public class GameplayScene implements Scene {
         }
     }
 
+    // Draws text on the center of the screen
     private void drawCenterText(Canvas canvas, Paint paint, String text) {
         paint.setTextAlign(Paint.Align.LEFT);
         canvas.getClipBounds(r);
