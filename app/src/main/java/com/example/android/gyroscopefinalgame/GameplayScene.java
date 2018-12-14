@@ -136,11 +136,11 @@ public class GameplayScene implements Scene {
                 float pitch = gyroscope.getOrientation()[1] - gyroscope.getStartOrientation()[1];
                 float roll = gyroscope.getOrientation()[2] - gyroscope.getStartOrientation()[2];
 
-                float xSpeed = 2 * roll * Constants.SCREEN_WIDTH / 9000f;
-                float ySpeed = 2 * pitch * Constants.SCREEN_HEIGHT / 9000f;
+                float xSpeed = 2 * roll * Constants.SCREEN_WIDTH / 1000f;
+                float ySpeed = pitch * Constants.SCREEN_HEIGHT / 1000f;
 
                 playerPoint.x += Math.abs(xSpeed * elapsedTime) > 5 ? xSpeed * elapsedTime : 0;
-                playerPoint.y += Math.abs(ySpeed * elapsedTime) > 5 ? ySpeed * elapsedTime : 0;
+                //playerPoint.y -= Math.abs(ySpeed * elapsedTime) > 5 ? ySpeed * elapsedTime : 0;
             }
 
             if(playerPoint.x < 0)
