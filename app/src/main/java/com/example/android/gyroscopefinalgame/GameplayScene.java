@@ -33,6 +33,8 @@ public class GameplayScene implements Scene {
     // Time between frames
     private long frameTime;
 
+    private Gyroscope gyroscope;
+
     // Constructor
     public GameplayScene() {
         // create player object here (separate player class)
@@ -44,7 +46,11 @@ public class GameplayScene implements Scene {
 
         // create obstacles here (separate class to handle the random generations)
 
+        gyroscope = new Gyroscope();
+        gyroscope.register();
+
         frameTime = System.currentTimeMillis();
+
     }
 
     // Resets the game
@@ -82,6 +88,7 @@ public class GameplayScene implements Scene {
                     reset();
                     gameOver = false;
                     // reset gyroscope data?
+                    gyroscope.newGame();
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -123,6 +130,18 @@ public class GameplayScene implements Scene {
                 frameTime = Constants.INIT_TIME;
             int elapsedTime = (int)(System.currentTimeMillis() - frameTime);
             frameTime = System.currentTimeMillis();
+
+            if (gyroscope.getOrientation() != null && gyroscope.getStartOrientation() != null)
+            {
+                float pitch = gyroscope.getOrientation()[1] - gyroscope.getStartOrientation()[1];
+                float roll = gyroscope.getOrientation()[2] - gyroscope.getStartOrientation()[2];
+
+                float xSpeed = 2 * roll * Constants.SCREEN_WIDTH / 9000f;
+                float ySpeed = 2 * pitch * Constants.SCREEN_HEIGHT / 9000f;
+
+                playerPoint.x += Math.abs(xSpeed * elapsedTime) > 5 ? xSpeed * elapsedTime : 0;
+                playerPoint.y += Math.abs(ySpeed * elapsedTime) > 5 ? ySpeed * elapsedTime : 0;
+            }
 
             if(playerPoint.x < 0)
                 playerPoint.x = 0;
