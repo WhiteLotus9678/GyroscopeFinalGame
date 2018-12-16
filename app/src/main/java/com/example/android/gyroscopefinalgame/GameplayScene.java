@@ -8,7 +8,11 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.util.Log;
 import android.view.MotionEvent;
+
+import java.util.ArrayList;
+import java.util.Random;
 
 public class GameplayScene implements Scene {
 
@@ -35,8 +39,27 @@ public class GameplayScene implements Scene {
 
     private Gyroscope gyroscope;
 
+    // ---------------- Obstacles related variables ------------
+
+    private Obstacle mainObstacle;
+    private Obstacle mainObstacle1; // does not exist atm
+    private Obstacle mainObstacle2; // does not exist atm
+    private int score = 0;
+    private int width;
+    private int height;
+    private int posX;
+    private int level = 0;
+    Random genBlockPosX = new Random(); // randoming the blocks falling position
+    Random genBlock = new Random(); // randoming the blocks
+    // create obstacles here (separate class to handle the random generations)
+    ArrayList<Obstacle> obstacles = new ArrayList<>();
+
+    //---------------- end of obstacles related variables -----------
+
     // Constructor
-    public GameplayScene() {
+    public GameplayScene(int width, int height) {
+        this.width = width;
+        this.height = height;
         // create player object here (separate player class)
         // setup player position here
         // make sure to update player
@@ -44,7 +67,28 @@ public class GameplayScene implements Scene {
         playerPoint = new Point(Constants.SCREEN_WIDTH/2, 3*Constants.SCREEN_HEIGHT/4);
         player.update(playerPoint);
 
-        // create obstacles here (separate class to handle the random generations)
+        // ------------------------------------------------- OBSTACLES RELATED ON CREATE-----------------------------------------------------------------
+        Obstacle shortObs = new Obstacle(new Rect(100, 100, 200, 200), Color.rgb(0, 200, 0));
+        Obstacle medObs = new Obstacle(new Rect(100, 100, 200, 200), Color.rgb(0, 0, 100));
+        Obstacle longObs = new Obstacle(new Rect(100, 100, 200, 200), Color.rgb(200, 200, 200));
+        // pushing all types of obstacle into an array
+        obstacles.add(shortObs);
+        obstacles.add(medObs);
+        obstacles.add(longObs);
+
+        // generating a random number between 0 and 2 to get a random obstacle in the array list
+        int index = genBlock.nextInt(obstacles.size()); // need fix here, can only get
+        mainObstacle = obstacles.get(index); // array 0, 1, 2
+
+        // **** Generating the 2nd block here ****
+        //index = genBlock.nextInt(obstacles.size());
+        //mainObstacle1 = obstacles.get(index);
+
+        Log.d("THE SCREEN WIDTH", Integer.toString(width)); // screen width is 800
+
+        posX = genBlockPosX.nextInt(width); // Randoming between the screen width
+        mainObstacle.getRect().offset(posX, -500);
+// --------------------------------------------------- END OF OBSTACLES ON CREATE-----------------------------------------------
 
         gyroscope = new Gyroscope();
         gyroscope.register();
@@ -111,7 +155,9 @@ public class GameplayScene implements Scene {
         //draw the player
         player.draw(canvas);
 
-        // draw obstacles
+        //------ Drawing the obstacles -----
+        mainObstacle.draw(canvas);
+        //------ end of drawing the obstacles
 
         if(gameOver) {
             Paint paint = new Paint();
@@ -153,13 +199,64 @@ public class GameplayScene implements Scene {
                 playerPoint.y = Constants.SCREEN_HEIGHT;
 
             player.update(playerPoint);
+
+            // ------------------------------  OBSTACLES IMPLEMENTATIONS ---------------------------------------------
+            // Check if the block has reached the bottom of the screen
+            if(mainObstacle.position.y >= 1400){
+                int index = genBlock.nextInt(obstacles.size()); // getting random number between obstacles' size
+                mainObstacle = obstacles.get(index); // getting the selected block from index
+                posX = genBlockPosX.nextInt(width); // Randoming between the screen width which is 800
+                //mainObstacle.getRect().offset(posX, -500);
+                mainObstacle.resetBlockPosition(posX); // resetting the block position when it hits the bottom screen
+                level++;
+                // Update the score down here.
+            }
+
+            // updating the obstacles position
+            mainObstacle.update(mainObstacle.position);
+
             // Check whether the player has collided with an obstacle
-            /*
-            if() {
+            if(player.getRectangle().intersect(mainObstacle.getRect()) || player.getRectangle().intersect(mainObstacle.getRect())
+                    || player.getRectangle().intersect(mainObstacle.getRect())) {
+
                 gameOver = true;
                 gameOverTime = System.currentTimeMillis();
             }
-            */
+
+            if(level == 1){
+                mainObstacle.update();
+            }else if(level <= 2){
+                mainObstacle.update();
+                mainObstacle.update();
+            }else if(level <= 3){
+                for(int i = 0; i <= 3; i++){
+                    mainObstacle.update();
+                }
+            }else if(level <= 4){
+                for(int i = 0; i <= 4; i++){
+                    mainObstacle.update();
+                }
+            }else if(level <= 5){
+                for(int i = 0; i <= 5; i++){
+                    mainObstacle.update();
+                }
+            }else if(level <= 6){
+                for(int i = 0; i <= 6; i++){
+                    mainObstacle.update();
+                }
+            }else if(level <= 7){
+                for(int i = 0; i <= 7; i++){
+                    mainObstacle.update();
+                }
+            } else if(level > 7){
+                for(int i = 0; i <= 8; i++){
+                    mainObstacle.update();
+                }
+            }
+
+            mainObstacle.update(); // dropping the block
+
+// ------------------------------------------------ End of obstacles implementations ---------------------------------------
         }
     }
 

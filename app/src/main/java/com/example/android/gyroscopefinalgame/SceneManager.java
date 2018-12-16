@@ -16,9 +16,9 @@ public class SceneManager {
     public static int ACTIVE_SCENE;
 
     // Constructor
-    public SceneManager() {
+    public SceneManager(int width, int height) {
         ACTIVE_SCENE = 0;
-        scenes.add(new GameplayScene());
+        scenes.add(new GameplayScene(width, height));
     }
 
     // Handle player controls based on the active scene

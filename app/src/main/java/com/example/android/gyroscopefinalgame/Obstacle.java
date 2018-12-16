@@ -12,7 +12,6 @@ public class Obstacle implements GameObject {
     public Point position;
     public int width;
     public int height;
-    private boolean isScore = false;
 
     public Rect getRect(){ return block;}
 
@@ -32,8 +31,6 @@ public class Obstacle implements GameObject {
         this.position.y += 4;
         this.update(this.position);
     }
-
-
 
     public void resetBlockPosition(int randX){
         this.position.y = 0;
