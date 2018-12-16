@@ -26,7 +26,7 @@ public class GameplayScene implements Scene {
     private Point playerPoint;
 
     // Checks if the player is moving
-    private boolean movingPlayer = false;
+    //private boolean movingPlayer = false;
 
     // Checks if the game is over
     private boolean gameOver = false;
@@ -64,7 +64,7 @@ public class GameplayScene implements Scene {
         // setup player position here
         // make sure to update player
         player = new Player(new Rect(100, 100, 200, 200), Color.rgb(255, 0, 0));
-        playerPoint = new Point(Constants.SCREEN_WIDTH/2, 3*Constants.SCREEN_HEIGHT/4);
+        playerPoint = new Point(Constants.SCREEN_WIDTH/2, 5*Constants.SCREEN_HEIGHT/6);
         player.update(playerPoint);
 
         // ------------------------------------------------- OBSTACLES RELATED ON CREATE-----------------------------------------------------------------
@@ -100,14 +100,19 @@ public class GameplayScene implements Scene {
     // Resets the game
     public void reset() {
         // reset player position
+        player = new Player(new Rect(100, 100, 200, 200), Color.rgb(255, 0, 0));
 
         // reset player object
-        playerPoint = new Point(Constants.SCREEN_WIDTH/2, 3*Constants.SCREEN_HEIGHT/4);
+        playerPoint = new Point(Constants.SCREEN_WIDTH/2, 5*Constants.SCREEN_HEIGHT/6);
         player.update(playerPoint);
 
-        // reset obstacles
+        // reset obstacle speed
+        level = 0;
 
-        movingPlayer = false;
+        // reset player score
+        score = 0;
+
+        //movingPlayer = false;
     }
 
     // Terminate the scene
@@ -116,33 +121,19 @@ public class GameplayScene implements Scene {
         SceneManager.ACTIVE_SCENE = 0;
     }
 
-    // TODO: Would out in documentation but waiting for gyroscope sensor data
     @Override
     public void receiveTouch(MotionEvent event) {
         switch(event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                // Pass in the point tapped and if it lies in the player's rectangle
-                // That way, player can't teleport
-                if(!gameOver && player.getRectangle().contains((int)event.getX(), (int)event.getY())) { // TODO: check if player finger is in player object area
-                    movingPlayer = true;
-                }
-
-                // If the game is over and 2s have elapsed then reset
+                // If the game is over and 2 seconds have elapsed, then reset
                 if(gameOver && System.currentTimeMillis() - gameOverTime >= 2000) {
                     reset();
                     gameOver = false;
-                    // reset gyroscope data?
+                    // reset gyroscope data
                     gyroscope.newGame();
                 }
                 break;
-            case MotionEvent.ACTION_MOVE:
-                if(!gameOver && movingPlayer) {
-                    // move player to new position
-                    playerPoint.set((int) event.getX(), (int) event.getY());
-                }
-                break;
             case MotionEvent.ACTION_UP:
-                movingPlayer = false;
                 break;
         }
     }
@@ -158,6 +149,12 @@ public class GameplayScene implements Scene {
         //------ Drawing the obstacles -----
         mainObstacle.draw(canvas);
         //------ end of drawing the obstacles
+
+        Paint paintScore = new Paint();
+        paintScore.setTextSize(100);
+        paintScore.setColor(Color.MAGENTA);
+
+        canvas.drawText("" + score, 150, 150 + paintScore.descent() - paintScore.ascent(), paintScore);
 
         if(gameOver) {
             Paint paint = new Paint();
@@ -179,14 +176,11 @@ public class GameplayScene implements Scene {
 
             if (gyroscope.getOrientation() != null && gyroscope.getStartOrientation() != null)
             {
-                float pitch = gyroscope.getOrientation()[1] - gyroscope.getStartOrientation()[1];
                 float roll = gyroscope.getOrientation()[2] - gyroscope.getStartOrientation()[2];
 
                 float xSpeed = 2 * roll * Constants.SCREEN_WIDTH / 1000f;
-                float ySpeed = pitch * Constants.SCREEN_HEIGHT / 1000f;
 
                 playerPoint.x += Math.abs(xSpeed * elapsedTime) > 5 ? xSpeed * elapsedTime : 0;
-                //playerPoint.y -= Math.abs(ySpeed * elapsedTime) > 5 ? ySpeed * elapsedTime : 0;
             }
 
             if(playerPoint.x < 0)
@@ -201,15 +195,17 @@ public class GameplayScene implements Scene {
             player.update(playerPoint);
 
             // ------------------------------  OBSTACLES IMPLEMENTATIONS ---------------------------------------------
-            // Check if the block has reached the bottom of the screen
-            if(mainObstacle.position.y >= 1400){
+            // Check if the block has reached the bottom of the player's y position
+            if(mainObstacle.position.y >= playerPoint.y){
                 int index = genBlock.nextInt(obstacles.size()); // getting random number between obstacles' size
                 mainObstacle = obstacles.get(index); // getting the selected block from index
-                posX = genBlockPosX.nextInt(width); // Randoming between the screen width which is 800
+                posX = genBlockPosX.nextInt(width); // Randomizing between the screen width which is 800
                 //mainObstacle.getRect().offset(posX, -500);
                 mainObstacle.resetBlockPosition(posX); // resetting the block position when it hits the bottom screen
                 level++;
-                // Update the score down here.
+
+                // Increment the score
+                score++;
             }
 
             // updating the obstacles position
