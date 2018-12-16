@@ -48,6 +48,8 @@ public class GameplayScene implements Scene {
     private int width;
     private int height;
     private int posX;
+    private int max = 750; // randoming the x position of the block
+    private int min = 50; //randoming the x position of the block
     private int level = 0;
     Random genBlockPosX = new Random(); // randoming the blocks falling position
     Random genBlock = new Random(); // randoming the blocks
@@ -68,26 +70,24 @@ public class GameplayScene implements Scene {
         player.update(playerPoint);
 
         // ------------------------------------------------- OBSTACLES RELATED ON CREATE-----------------------------------------------------------------
-        Obstacle shortObs = new Obstacle(new Rect(100, 100, 200, 200), Color.rgb(0, 200, 0));
-        Obstacle medObs = new Obstacle(new Rect(100, 100, 200, 200), Color.rgb(0, 0, 100));
-        Obstacle longObs = new Obstacle(new Rect(100, 100, 200, 200), Color.rgb(200, 200, 200));
+        Obstacle shortObs = new Obstacle(new Rect(100, 100, 200, 200), Color.rgb(0, 0, 0)); // black 1 point
+        Obstacle medObs = new Obstacle(new Rect(100, 100, 200, 200), Color.rgb(102, 0, 153)); // purple 3 point
+        Obstacle longObs = new Obstacle(new Rect(100, 100, 200, 200), Color.rgb(255, 204, 51)); // gold 5 point
         // pushing all types of obstacle into an array
         obstacles.add(shortObs);
         obstacles.add(medObs);
         obstacles.add(longObs);
 
         // generating a random number between 0 and 2 to get a random obstacle in the array list
-        int index = genBlock.nextInt(obstacles.size()); // need fix here, can only get
+        int index = genBlock.nextInt(obstacles.size());
         mainObstacle = obstacles.get(index); // array 0, 1, 2
 
-        // **** Generating the 2nd block here ****
-        //index = genBlock.nextInt(obstacles.size());
-        //mainObstacle1 = obstacles.get(index);
+        //Log.d("THE SCREEN WIDTH", Integer.toString(width)); // screen width is 800
 
-        Log.d("THE SCREEN WIDTH", Integer.toString(width)); // screen width is 800
-
-        posX = genBlockPosX.nextInt(width); // Randoming between the screen width
+        posX = genBlockPosX.nextInt(max-min) + min; // Randoming between the screen width
+        mainObstacle.resetBlockPosition(posX);
         mainObstacle.getRect().offset(posX, -500);
+
         // --------------------------------------------------- END OF OBSTACLES ON CREATE-----------------------------------------------
 
         gyroscope = new Gyroscope();
@@ -108,6 +108,8 @@ public class GameplayScene implements Scene {
 
         // reset obstacle speed
         level = 0;
+        posX = genBlockPosX.nextInt(max-min) + min;
+        mainObstacle.resetBlockPosition(posX);
 
         // reset player score
         score = 0;
@@ -148,6 +150,7 @@ public class GameplayScene implements Scene {
 
         //------ Drawing the obstacles -----
         mainObstacle.draw(canvas);
+        //mainObstacle1.draw(canvas);
         //------ end of drawing the obstacles
 
         Paint paintScore = new Paint();
@@ -199,7 +202,7 @@ public class GameplayScene implements Scene {
             if(mainObstacle.position.y >= playerPoint.y){
                 int index = genBlock.nextInt(obstacles.size()); // getting random number between obstacles' size
                 mainObstacle = obstacles.get(index); // getting the selected block from index
-                posX = genBlockPosX.nextInt(width); // Randomizing between the screen width which is 800
+                posX = genBlockPosX.nextInt(max-min) + min; // Randomizing between the screen width which is 800
                 //mainObstacle.getRect().offset(posX, -500);
                 mainObstacle.resetBlockPosition(posX); // resetting the block position when it hits the bottom screen
                 level++;

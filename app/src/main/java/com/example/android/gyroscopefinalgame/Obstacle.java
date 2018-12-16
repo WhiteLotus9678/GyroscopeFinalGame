@@ -28,7 +28,7 @@ public class Obstacle implements GameObject {
         //block.left += 5;
         //block.right += 5;
         //block.bottom += 4;
-        this.position.y += 4;
+        this.position.y += 2;
         this.update(this.position);
     }
 
