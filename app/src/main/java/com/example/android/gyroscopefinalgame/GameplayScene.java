@@ -17,7 +17,7 @@ import java.util.Random;
 public class GameplayScene implements Scene {
 
     // Shape to bind text within
-    private Rect r;
+    private Rect r = new Rect();
 
     // Player object
     private Player player;
@@ -88,7 +88,7 @@ public class GameplayScene implements Scene {
 
         posX = genBlockPosX.nextInt(width); // Randoming between the screen width
         mainObstacle.getRect().offset(posX, -500);
-// --------------------------------------------------- END OF OBSTACLES ON CREATE-----------------------------------------------
+        // --------------------------------------------------- END OF OBSTACLES ON CREATE-----------------------------------------------
 
         gyroscope = new Gyroscope();
         gyroscope.register();
@@ -216,8 +216,7 @@ public class GameplayScene implements Scene {
             mainObstacle.update(mainObstacle.position);
 
             // Check whether the player has collided with an obstacle
-            if(player.getRectangle().intersect(mainObstacle.getRect()) || player.getRectangle().intersect(mainObstacle.getRect())
-                    || player.getRectangle().intersect(mainObstacle.getRect())) {
+            if(player.getRectangle().intersect(mainObstacle.getRect())) {
 
                 gameOver = true;
                 gameOverTime = System.currentTimeMillis();
