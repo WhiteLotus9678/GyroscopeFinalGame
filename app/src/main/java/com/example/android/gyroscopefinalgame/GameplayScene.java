@@ -14,6 +14,8 @@ import android.view.MotionEvent;
 import java.util.ArrayList;
 import java.util.Random;
 
+import static android.content.ContentValues.TAG;
+
 public class GameplayScene implements Scene {
 
     // Shape to bind text within
@@ -179,12 +181,15 @@ public class GameplayScene implements Scene {
 
             if (gyroscope.getOrientation() != null && gyroscope.getStartOrientation() != null)
             {
-                float roll = gyroscope.getOrientation()[2] - gyroscope.getStartOrientation()[2];
+                //float roll = gyroscope.getOrientation()[2] - gyroscope.getStartOrientation()[2];
 
-                float xSpeed = 2 * roll * Constants.SCREEN_WIDTH / 1000f;
-
-                playerPoint.x += Math.abs(xSpeed * elapsedTime) > 5 ? xSpeed * elapsedTime : 0;
             }
+
+            float roll = gyroscope.GetCurrentX();
+            // float xSpeed = 2 * roll * Constants.SCREEN_WIDTH / 1000f;
+
+            playerPoint.x -= roll * 3;
+            Log.d(TAG, "Current X value: " + roll + ", Current Player X: " + playerPoint.x);
 
             if(playerPoint.x < 0)
                 playerPoint.x = 0;

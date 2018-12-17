@@ -5,6 +5,9 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.util.Log;
+
+import static android.content.ContentValues.TAG;
 
 public class Gyroscope implements SensorEventListener {
     private SensorManager manager;
@@ -27,6 +30,8 @@ public class Gyroscope implements SensorEventListener {
         startOrientation = null;
     }
 
+    private float currentX;
+
     public Gyroscope() {
         manager = (SensorManager)Constants.CURRENT_CONTEXT.getSystemService(Context.SENSOR_SERVICE);
         accelerometer = manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -48,7 +53,8 @@ public class Gyroscope implements SensorEventListener {
     }
     @Override
     public void onSensorChanged(SensorEvent event) {
-        System.out.println("orientation = " + getOrientation()[1]);
+        //Log.d(TAG, "onSensorChanged: X: " + event.values[0] + " Y: " + event.values[1] + " Z: "  + event.values[2]);
+        currentX = event.values[0];
         if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
         {
             accelOutput = event.values;
@@ -67,5 +73,9 @@ public class Gyroscope implements SensorEventListener {
                 }
             }
         }
+    }
+    public float GetCurrentX()
+    {
+        return currentX;
     }
 }
