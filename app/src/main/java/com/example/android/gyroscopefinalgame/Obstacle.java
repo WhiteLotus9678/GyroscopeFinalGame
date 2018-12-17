@@ -14,14 +14,16 @@ public class Obstacle implements GameObject {
     public Point position;
     public int width;
     public int height;
+    private int score;
     Random genBlockPosX = new Random();
 
     public Rect getRect(){ return block;}
 
-    public Obstacle(Rect block, int color, int size){
+    public Obstacle(Rect block, int color, int size, int score){
         this.block = block;
         this.color = color;
         this.width = size;
+        this.score = score;
         this.height = 100;
         this.position = new Point(0,0);
     }
@@ -31,7 +33,7 @@ public class Obstacle implements GameObject {
         //block.left += 5;
         //block.right += 5;
         //block.bottom += 4;
-        this.position.y += 2;
+        this.position.y += 4;
         this.update(this.position);
     }
 
@@ -57,10 +59,14 @@ public class Obstacle implements GameObject {
         dropRec();
     }
 
+    public int getScore(){
+        return this.score;
+    }
+
     // Moves the rectangle to a different point
-    public void update(Point point) {
+    public void update(Point position) {
         // left, top, right, bottom
-        block.set(point.x - this.width/2, point.y - this.height/2, point.x + this.width/2, point.y + this.height/2);
+        block.set(position.x - this.width/2, position.y - this.height/2, position.x + this.width/2, position.y + this.height/2);
     }
 
 }

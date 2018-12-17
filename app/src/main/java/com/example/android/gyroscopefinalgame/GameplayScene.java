@@ -73,9 +73,9 @@ public class GameplayScene implements Scene {
         player.update(playerPoint);
 
         // ------------------------------------------------- OBSTACLES RELATED ON CREATE-----------------------------------------------------------------
-        Obstacle shortObs = new Obstacle(new Rect(100, 100, 200, 200), Color.rgb(0, 0, 0), 100); // black 1 point
-        Obstacle medObs = new Obstacle(new Rect(100, 100, 200, 200), Color.rgb(102, 0, 153), 175); // purple 3 point
-        Obstacle longObs = new Obstacle(new Rect(100, 100, 200, 200), Color.rgb(255, 204, 51),250); // gold 5 point
+        Obstacle shortObs = new Obstacle(new Rect(100, 100, 200, 200), Color.rgb(0, 0, 0), 100, 1); // black 1 point
+        Obstacle medObs = new Obstacle(new Rect(100, 100, 200, 200), Color.rgb(102, 0, 153), 175,3); // purple 3 point
+        Obstacle longObs = new Obstacle(new Rect(100, 100, 200, 200), Color.rgb(255, 204, 51),250,5); // gold 5 point
         // pushing all types of obstacle into an array
         obstacles.add(shortObs);
         obstacles.add(medObs);
@@ -199,6 +199,8 @@ public class GameplayScene implements Scene {
             // Check if the block has reached the bottom of the player's y position
             if(mainObstacle.position.y >= playerPoint.y){
 
+                // Increment the score
+                score += mainObstacle.getScore();
                 int index = genBlock.nextInt(obstacles.size()); // getting random number between obstacles' size
                 mainObstacle = obstacles.get(index); // getting the selected block from index
                 /*
@@ -208,9 +210,6 @@ public class GameplayScene implements Scene {
                 mainObstacle.resetBlockPosition(800); // resetting the block position when it hits the bottom screen
 
                 level++;
-
-                // Increment the score
-                score++;
             }
 
             // updating the obstacles position
@@ -223,7 +222,7 @@ public class GameplayScene implements Scene {
                 gameOverTime = System.currentTimeMillis();
             }
 
-            if(level == 1){
+            if(level <= 1){
                 mainObstacle.update();
             }else if(level <= 2){
                 mainObstacle.update();
