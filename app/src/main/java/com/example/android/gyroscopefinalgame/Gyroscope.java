@@ -14,22 +14,6 @@ public class Gyroscope implements SensorEventListener {
     private Sensor accelerometer;
     private Sensor magnetometer;
 
-    private float[] accelOutput;
-    private float[] magOutput;
-
-    private float[] orientation = new float[3];
-    public float[] getOrientation() {
-        return orientation;
-    }
-
-    private float[] startOrientation = null;
-    public float[] getStartOrientation() {
-        return startOrientation;
-    }
-    public void newGame() {
-        startOrientation = null;
-    }
-
     private float currentX;
 
     public Gyroscope() {
@@ -53,26 +37,7 @@ public class Gyroscope implements SensorEventListener {
     }
     @Override
     public void onSensorChanged(SensorEvent event) {
-        //Log.d(TAG, "onSensorChanged: X: " + event.values[0] + " Y: " + event.values[1] + " Z: "  + event.values[2]);
         currentX = event.values[0];
-        if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
-        {
-            accelOutput = event.values;
-        }
-        else if(event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
-            magOutput = event.values;
-        if(accelOutput != null && magOutput != null) {
-            float[] R = new float[9];
-            float[] I = new float[9];
-            boolean success = SensorManager.getRotationMatrix(R, I, accelOutput, magOutput);
-            if(success) {
-                SensorManager.getOrientation(R, orientation);
-                if(startOrientation == null) {
-                    startOrientation = new float[orientation.length];
-                    System.arraycopy(orientation, 0, startOrientation, 0, orientation.length);
-                }
-            }
-        }
     }
     public float GetCurrentX()
     {

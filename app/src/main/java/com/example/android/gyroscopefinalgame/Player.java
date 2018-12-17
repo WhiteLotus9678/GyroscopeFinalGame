@@ -47,5 +47,9 @@ public class Player implements GameObject {
         // Set as: left side, top side, right side, bottom side
         rectangle.set(point.x - rectangle.width()/2, point.y - rectangle.height()/2, point.x + rectangle.width()/2, point.y + rectangle.height()/2);
     }
+    public int GetWidth()
+    {
+        return rectangle.width();
+    }
 }
 

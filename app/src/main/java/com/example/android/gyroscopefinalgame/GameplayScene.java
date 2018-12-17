@@ -50,6 +50,7 @@ public class GameplayScene implements Scene {
     private int width;
     private int height;
     private int posX;
+    private int moveSpeed = 3;
     private int max = 750; // randoming the x position of the block
     private int min = 50; //randoming the x position of the block
     private int level = 0;
@@ -133,8 +134,6 @@ public class GameplayScene implements Scene {
                 if(gameOver && System.currentTimeMillis() - gameOverTime >= 2000) {
                     reset();
                     gameOver = false;
-                    // reset gyroscope data
-                    gyroscope.newGame();
                 }
                 break;
             case MotionEvent.ACTION_UP:
@@ -179,22 +178,15 @@ public class GameplayScene implements Scene {
             int elapsedTime = (int)(System.currentTimeMillis() - frameTime);
             frameTime = System.currentTimeMillis();
 
-            if (gyroscope.getOrientation() != null && gyroscope.getStartOrientation() != null)
-            {
-                //float roll = gyroscope.getOrientation()[2] - gyroscope.getStartOrientation()[2];
-
-            }
-
             float roll = gyroscope.GetCurrentX();
             // float xSpeed = 2 * roll * Constants.SCREEN_WIDTH / 1000f;
 
-            playerPoint.x -= roll * 3;
-            Log.d(TAG, "Current X value: " + roll + ", Current Player X: " + playerPoint.x);
+            playerPoint.x -= roll * moveSpeed;
 
-            if(playerPoint.x < 0)
-                playerPoint.x = 0;
-            else if(playerPoint.x > Constants.SCREEN_WIDTH)
-                playerPoint.x = Constants.SCREEN_WIDTH;
+            if(playerPoint.x < player.GetWidth() * 0.5)
+                playerPoint.x = (int)(player.GetWidth() * 0.5);
+            else if(playerPoint.x > Constants.SCREEN_WIDTH - player.GetWidth() * 0.5)
+                playerPoint.x = Constants.SCREEN_WIDTH - (int)(player.GetWidth() * 0.5);
             if(playerPoint.y < 0)
                 playerPoint.y = 0;
             else if(playerPoint.y > Constants.SCREEN_HEIGHT)
