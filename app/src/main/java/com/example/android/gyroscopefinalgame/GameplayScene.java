@@ -39,7 +39,7 @@ public class GameplayScene implements Scene {
     // Time between frames
     private long frameTime;
 
-    private Gyroscope gyroscope;
+    private Accelerometer accelerometer;
 
     // ---------------- Obstacles related variables ------------
 
@@ -50,7 +50,7 @@ public class GameplayScene implements Scene {
     private int width;
     private int height;
     private int posX;
-    private int moveSpeed = 3;
+    private int moveSpeed = 3; // multiplier of base accelerometer speed
     private int max = 750; // randoming the x position of the block
     private int min = 50; //randoming the x position of the block
     private int level = 0;
@@ -93,8 +93,9 @@ public class GameplayScene implements Scene {
 
         // --------------------------------------------------- END OF OBSTACLES ON CREATE-----------------------------------------------
 
-        gyroscope = new Gyroscope();
-        gyroscope.register();
+        // instantiate accelerometer and register it to active sensors
+        accelerometer = new Accelerometer();
+        accelerometer.register();
 
         frameTime = System.currentTimeMillis();
 
@@ -178,11 +179,11 @@ public class GameplayScene implements Scene {
             int elapsedTime = (int)(System.currentTimeMillis() - frameTime);
             frameTime = System.currentTimeMillis();
 
-            float roll = gyroscope.GetCurrentX();
-            // float xSpeed = 2 * roll * Constants.SCREEN_WIDTH / 1000f;
-
+            // Update player position based on accelerometer
+            float roll = accelerometer.GetCurrentX();
             playerPoint.x -= roll * moveSpeed;
 
+            // Make sure player stays within the game screen
             if(playerPoint.x < player.GetWidth() * 0.5)
                 playerPoint.x = (int)(player.GetWidth() * 0.5);
             else if(playerPoint.x > Constants.SCREEN_WIDTH - player.GetWidth() * 0.5)

@@ -9,24 +9,26 @@ import android.util.Log;
 
 import static android.content.ContentValues.TAG;
 
-public class Gyroscope implements SensorEventListener {
+public class Accelerometer implements SensorEventListener {
     private SensorManager manager;
     private Sensor accelerometer;
     private Sensor magnetometer;
 
     private float currentX;
 
-    public Gyroscope() {
+    public Accelerometer() {
         manager = (SensorManager)Constants.CURRENT_CONTEXT.getSystemService(Context.SENSOR_SERVICE);
         accelerometer = manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         magnetometer = manager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
     }
 
+    // register all sensor types to the main Listener
     public void register() {
         manager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
         manager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_GAME);
     }
 
+    // unregister listener when game is paused
     public void pause() {
         manager.unregisterListener(this);
     }
@@ -36,9 +38,12 @@ public class Gyroscope implements SensorEventListener {
 
     }
     @Override
+    // update current x based on sensor detecting changes
     public void onSensorChanged(SensorEvent event) {
         currentX = event.values[0];
     }
+
+    // returns the current value of the x axis
     public float GetCurrentX()
     {
         return currentX;
