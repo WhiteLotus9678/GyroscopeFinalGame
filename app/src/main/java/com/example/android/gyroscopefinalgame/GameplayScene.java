@@ -113,7 +113,7 @@ public class GameplayScene implements Scene {
         // reset obstacle speed
         level = 0;
         posX = genBlockPosX.nextInt(max-min) + min;
-        mainObstacle.resetBlockPosition(posX);
+        mainObstacle.resetBlockPosition(width);
 
         // reset player score
         score = 0;
